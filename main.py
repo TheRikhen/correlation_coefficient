@@ -2,27 +2,21 @@ from csv import DictReader
 import pandas as pd
 
 
-def fill_cluster(first, second):
-    varieties = []
-    with open('users_info.csv', 'r') as read_obj:
-        csv_dict_reader = DictReader(read_obj)
-        try:
-            for row in csv_dict_reader:
-                if row['Age'] != '' and row['City'] != '' and row['City_id'] != '':
-                    varieties.append([int(row[first]), int(row[second])])
-        except:
-            pass
-    cor_coef(varieties)
+def fill_cluster(args):
+    data = pd.read_csv('users_info.csv')
+    new_data = data.dropna(subset=['Age', 'Photos', 'City_id'])
+    df = pd.DataFrame(new_data, columns=args)
+    df['Age'] = df['Age'].astype(int)
+    cor_coef(df)
 
 
 def cor_coef(varieties):
-    df = pd.DataFrame(data=varieties)
-    print(df)
-    print(df.corr())
+    print(varieties)
+    print(varieties.corr())
 
 
 def main():
-    fill_cluster('Photos', 'Profile_entries')
+    fill_cluster(['Age', 'Profile_entries'])
 
 
 if __name__ == '__main__':
